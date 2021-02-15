@@ -12,6 +12,9 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passWordFocus = new FocusNode();
   final _passWordController = new TextEditingController();
   bool _isLogin = true;
+  void validateTheData() {
+    ;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: 20,
                     ),
                     TextFormField(
+                      keyboardType: TextInputType.emailAddress,
                       focusNode: _nameFocus,
                       onFieldSubmitted: (value) {
                         print(value);
@@ -59,6 +63,17 @@ class _AuthScreenState extends State<AuthScreen> {
                         hintText: "Email",
                         prefixIcon: Icon(Icons.email),
                       ),
+                      validator: (value) {
+                        value = value.toLowerCase();
+                        if (value.isNotEmpty &&
+                            value.contains("@") &&
+                            value.contains(".com")) {
+                          print("Value is correct");
+                        } else {
+                          _userNameController.clear();
+                        }
+                        return;
+                      },
                     ),
                     SizedBox(
                       height: 10,
@@ -73,6 +88,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          //TODO:Validate Password........
+                          _passWordController.clear();
+                        }
+                        return;
+                      },
                     ),
                   ],
                 ),
