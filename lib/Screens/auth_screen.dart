@@ -12,8 +12,11 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passWordFocus = new FocusNode();
   final _passWordController = new TextEditingController();
   bool _isLogin = true;
+
   void validateTheData() {
-    ;
+    print("pressed for validate");
+    print(_key.currentState.validate());
+    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -69,10 +72,11 @@ class _AuthScreenState extends State<AuthScreen> {
                             value.contains("@") &&
                             value.contains(".com")) {
                           print("Value is correct");
+                          return null;
                         } else {
                           _userNameController.clear();
                         }
-                        return;
+                        return "Enter Again";
                       },
                     ),
                     SizedBox(
@@ -89,12 +93,33 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value.isEmpty || value.length < 4) {
                           //TODO:Validate Password........
                           _passWordController.clear();
+                          return "Enter Again";
                         }
-                        return;
+                        return null;
                       },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 40,
+                      child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        child: Text(
+                          "Login",
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            30,
+                          ),
+                        ),
+                        onPressed: validateTheData,
+                      ),
                     ),
                   ],
                 ),

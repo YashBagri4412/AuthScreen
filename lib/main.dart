@@ -21,6 +21,8 @@ class MyApp extends StatelessWidget {
             fontSize: 30,
             color: Colors.black87,
           ),
+          headline6: GoogleFonts.openSans(
+              color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ),
       home: AuthScreen(),
