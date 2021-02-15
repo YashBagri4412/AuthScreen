@@ -8,6 +8,8 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _key = GlobalKey<FormState>();
   final _userNameController = new TextEditingController();
+  final _nameFocus = new FocusNode();
+  final _passWordFocus = new FocusNode();
   final _passWordController = new TextEditingController();
   bool _isLogin = true;
 
@@ -22,7 +24,7 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: Theme.of(context).primaryColorDark,
       body: Center(
         child: Container(
-          height: height * 0.65,
+          height: height * 0.75,
           width: width * 0.95,
           child: Card(
             margin: EdgeInsets.all(10),
@@ -44,9 +46,32 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: 20,
                     ),
                     TextFormField(
+                      focusNode: _nameFocus,
+                      onFieldSubmitted: (value) {
+                        print(value);
+                        _passWordFocus.requestFocus();
+                      },
+                      controller: _userNameController,
                       decoration: InputDecoration(
-                        labelText: "Email",
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        hintText: "Email",
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      focusNode: _passWordFocus,
+                      controller: _passWordController,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        prefixIcon: Icon(Icons.lock),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
                     ),
                   ],
