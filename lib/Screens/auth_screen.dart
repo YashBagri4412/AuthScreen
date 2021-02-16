@@ -12,11 +12,17 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passWordFocus = new FocusNode();
   final _passWordController = new TextEditingController();
   bool _isLogin = true;
+  String _userName;
+  String _passWord;
 
   void validateTheData() {
-    print("pressed for validate");
-    print(_key.currentState.validate());
     FocusScope.of(context).unfocus();
+    if (_key.currentState.validate()) {
+      _userName = _userNameController.text.toString();
+      _passWord = _passWordController.text.toString();
+      print(_userName);
+      print(_passWord);
+    }
   }
 
   @override
@@ -93,10 +99,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                       validator: (value) {
-                        if (value.isEmpty || value.length < 4) {
-                          //TODO:Validate Password........
+                        if (value.isEmpty) {
                           _passWordController.clear();
-                          return "Enter Again";
+                          return "Enter a Valid password";
+                        } else if (value.length < 4) {
+                          _passWordController.clear();
+                          return "enter a password more than 4 characters";
                         }
                         return null;
                       },
@@ -120,6 +128,26 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         onPressed: validateTheData,
                       ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "Or Login With",
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RaisedButton.icon(
+                          icon: Icon(Icons.android),
+                          label: Text("Login with google"),
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -22,7 +22,12 @@ class MyApp extends StatelessWidget {
             color: Colors.black87,
           ),
           headline6: GoogleFonts.openSans(
-              color: Colors.white, fontWeight: FontWeight.w700),
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+          subtitle1: GoogleFonts.openSans(
+            color: Colors.black54,
+          ),
         ),
       ),
       home: AuthScreen(),
