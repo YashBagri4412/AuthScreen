@@ -14,6 +14,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passWordController = new TextEditingController();
   bool _isLogin = true;
   bool _gButtonHighlightState = false;
+
   String _userName;
   String _passWord;
 
@@ -37,9 +38,10 @@ class _AuthScreenState extends State<AuthScreen> {
         MediaQuery.of(context).padding.bottom;
     final width = size.width;
     final widthOfContainer = width * 0.95;
-    final heightOfContainer = height * 0.59;
+    final heightOfContainer = height * 0.80;
     print("$heightOfContainer + $widthOfContainer");
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).primaryColorDark,
       body: Center(
         child: Container(
@@ -204,7 +206,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                               ),
                               onPressed: () {},
-                            )
+                            ),
                           ],
                         ),
                       ),
