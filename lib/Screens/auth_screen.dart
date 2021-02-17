@@ -37,7 +37,7 @@ class _AuthScreenState extends State<AuthScreen> {
         MediaQuery.of(context).padding.bottom;
     final width = size.width;
     final widthOfContainer = width * 0.95;
-    final heightOfContainer = height * 0.60;
+    final heightOfContainer = height * 0.59;
     print("$heightOfContainer + $widthOfContainer");
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
@@ -178,7 +178,10 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: heightOfContainer * 0.020,
+                      height: heightOfContainer * 0.015,
+                    ),
+                    Divider(
+                      thickness: 2,
                     ),
                     Expanded(
                       child: Align(
@@ -187,7 +190,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "Sign Up Using",
+                              "No Account Yet!",
                               style: Theme.of(context).textTheme.caption,
                             ),
                             FlatButton(
