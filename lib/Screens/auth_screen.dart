@@ -12,8 +12,10 @@ class _AuthScreenState extends State<AuthScreen> {
   final _nameFocus = new FocusNode();
   final _passWordFocus = new FocusNode();
   final _passWordController = new TextEditingController();
+
   bool _isLogin = true;
   bool _gButtonHighlightState = false;
+  bool _sButtonHighlightState = false;
 
   String _userName;
   String _passWord;
@@ -98,6 +100,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: heightOfContainer * 0.020,
                     ),
                     TextFormField(
+                      obscureText: true,
                       focusNode: _passWordFocus,
                       controller: _passWordController,
                       decoration: InputDecoration(
@@ -198,13 +201,27 @@ class _AuthScreenState extends State<AuthScreen> {
                             FlatButton(
                               materialTapTargetSize:
                                   MaterialTapTargetSize.shrinkWrap,
+                              highlightColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
                               child: Text(
                                 "Sign Up",
-                                style: GoogleFonts.openSans(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: (_sButtonHighlightState)
+                                    ? GoogleFonts.openSans(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      )
+                                    : GoogleFonts.openSans(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                               ),
+                              onHighlightChanged: (value) {
+                                setState(() {
+                                  _sButtonHighlightState = value;
+                                });
+                              },
                               onPressed: () {},
                             ),
                           ],
