@@ -8,10 +8,13 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _key = GlobalKey<FormState>();
+
   final _userNameController = new TextEditingController();
   final _nameFocus = new FocusNode();
   final _passWordFocus = new FocusNode();
+  final _confirmPswFocus = new FocusNode();
   final _passWordController = new TextEditingController();
+  final _confirmPswController = new TextEditingController();
 
   bool _isLogin = true;
   bool _gButtonHighlightState = false;
@@ -40,8 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
         MediaQuery.of(context).padding.bottom;
     final width = size.width;
     final widthOfContainer = width * 0.95;
-    final heightOfContainer = height * 0.80;
-    print("$heightOfContainer + $widthOfContainer");
+    final heightOfContainer = _isLogin ? height * 0.75 : height * 0.90;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).primaryColorDark,
@@ -62,7 +64,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Column(
                   children: [
                     Text(
-                      "LOGIN",
+                      _isLogin ? "LOGIN" : "SIGN UP!",
                       style: Theme.of(context).textTheme.headline3,
                     ),
                     SizedBox(
@@ -121,6 +123,35 @@ class _AuthScreenState extends State<AuthScreen> {
                         return null;
                       },
                     ),
+                    if (!_isLogin)
+                      SizedBox(
+                        height: heightOfContainer * 0.020,
+                      ),
+                    if (!_isLogin)
+                      TextFormField(
+                        obscureText: true,
+                        focusNode: _confirmPswFocus,
+                        controller: _confirmPswController,
+                        decoration: InputDecoration(
+                          hintText: "Confirm Password",
+                          prefixIcon: Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            _passWordController.clear();
+                            return "Enter a Valid password";
+                          } else if (value.length < 4) {
+                            _passWordController.clear();
+                            return "Enter a password more than 4 characters";
+                          } else if (_passWordController.text.isEmpty) {
+                            return "Enter Password Before Confirming it!!";
+                          }
+                          return null;
+                        },
+                      ),
                     SizedBox(
                       height: heightOfContainer * 0.035,
                     ),
@@ -130,7 +161,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         child: Text(
-                          "Login",
+                          _isLogin ? "Login" : "Sign Up",
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         shape: RoundedRectangleBorder(
@@ -206,7 +237,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
-                                "Sign Up",
+                                _isLogin ? "Sign Up" : "Login",
                                 style: (_sButtonHighlightState)
                                     ? GoogleFonts.openSans(
                                         color: Colors.white,
@@ -222,7 +253,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                   _sButtonHighlightState = value;
                                 });
                               },
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  _isLogin = !_isLogin;
+                                });
+                                _passWordController.clear();
+                                _userNameController.clear();
+                                FocusScope.of(context).unfocus();
+                              },
                             ),
                           ],
                         ),
