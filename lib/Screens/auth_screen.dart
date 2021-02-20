@@ -43,7 +43,8 @@ class _AuthScreenState extends State<AuthScreen> {
         MediaQuery.of(context).padding.bottom;
     final width = size.width;
     final widthOfContainer = width * 0.95;
-    final heightOfContainer = _isLogin ? height * 0.75 : height * 0.90;
+    double heightOfContainer = _isLogin ? height * 0.68 : height * 0.80;
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).primaryColorDark,
@@ -68,72 +69,50 @@ class _AuthScreenState extends State<AuthScreen> {
                       style: Theme.of(context).textTheme.headline3,
                     ),
                     SizedBox(
-                      height: heightOfContainer * 0.035,
+                      height: 20,
                     ),
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      focusNode: _nameFocus,
-                      onFieldSubmitted: (value) {
-                        print(value);
-                        _passWordFocus.requestFocus();
-                      },
-                      controller: _userNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    Expanded(
+                      flex: 1,
+                      child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        focusNode: _nameFocus,
+                        onFieldSubmitted: (value) {
+                          print(value);
+                          _passWordFocus.requestFocus();
+                        },
+                        controller: _userNameController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          hintText: "Email",
+                          prefixIcon: Icon(Icons.email),
                         ),
-                        hintText: "Email",
-                        prefixIcon: Icon(Icons.email),
+                        validator: (value) {
+                          value = value.toLowerCase();
+                          if (value.isNotEmpty &&
+                              value.contains("@") &&
+                              value.contains(".com")) {
+                            print("Value is correct");
+                            return null;
+                          } else {
+                            _userNameController.clear();
+                          }
+                          return "Enter Again";
+                        },
                       ),
-                      validator: (value) {
-                        value = value.toLowerCase();
-                        if (value.isNotEmpty &&
-                            value.contains("@") &&
-                            value.contains(".com")) {
-                          print("Value is correct");
-                          return null;
-                        } else {
-                          _userNameController.clear();
-                        }
-                        return "Enter Again";
-                      },
                     ),
                     SizedBox(
-                      height: heightOfContainer * 0.020,
+                      height: 5,
                     ),
-                    TextFormField(
-                      obscureText: true,
-                      focusNode: _passWordFocus,
-                      controller: _passWordController,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          _passWordController.clear();
-                          return "Enter a Valid password";
-                        } else if (value.length < 4) {
-                          _passWordController.clear();
-                          return "enter a password more than 4 characters";
-                        }
-                        return null;
-                      },
-                    ),
-                    if (!_isLogin)
-                      SizedBox(
-                        height: heightOfContainer * 0.020,
-                      ),
-                    if (!_isLogin)
-                      TextFormField(
+                    Expanded(
+                      flex: 1,
+                      child: TextFormField(
                         obscureText: true,
-                        focusNode: _confirmPswFocus,
-                        controller: _confirmPswController,
+                        focusNode: _passWordFocus,
+                        controller: _passWordController,
                         decoration: InputDecoration(
-                          hintText: "Confirm Password",
+                          hintText: "Password",
                           prefixIcon: Icon(Icons.lock),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -145,19 +124,57 @@ class _AuthScreenState extends State<AuthScreen> {
                             return "Enter a Valid password";
                           } else if (value.length < 4) {
                             _passWordController.clear();
-                            return "Enter a password more than 4 characters";
-                          } else if (_passWordController.text.isEmpty) {
-                            return "Enter Password Before Confirming it!!";
+                            return "enter a password more than 4 characters";
                           }
                           return null;
                         },
                       ),
+                    ),
+                    if (!_isLogin)
+                      SizedBox(
+                        height: 5,
+                      ),
+                    if (!_isLogin)
+                      Expanded(
+                        flex: 1,
+                        child: TextFormField(
+                          obscureText: true,
+                          focusNode: _confirmPswFocus,
+                          controller: _confirmPswController,
+                          decoration: InputDecoration(
+                            hintText: "Confirm Password",
+                            prefixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              _passWordController.clear();
+                              return "Enter a Valid password";
+                            } else if (value.length < 4) {
+                              _passWordController.clear();
+                              return "Enter a password more than 4 characters";
+                            } else if (_passWordController.text.isEmpty) {
+                              return "Enter Password Before Confirming it!!";
+                            } else if (_passWordController.text
+                                        .compareTo(_confirmPswController.text) <
+                                    0 ||
+                                _passWordController.text
+                                        .compareTo(_confirmPswController.text) >
+                                    0) {
+                              return "Passwords dont match!";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     SizedBox(
-                      height: heightOfContainer * 0.035,
+                      height: 15,
                     ),
                     Container(
                       width: double.infinity,
-                      height: heightOfContainer * 0.077,
+                      height: 40,
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         child: Text(
@@ -173,7 +190,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: heightOfContainer * 0.050,
+                      height: 20,
                     ),
                     Text(
                       "Or Sign Up Using",
@@ -214,14 +231,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: heightOfContainer * 0.015,
+                      height: 10,
                     ),
                     Divider(
                       thickness: 2,
                     ),
                     Expanded(
                       child: Align(
-                        alignment: FractionalOffset.bottomCenter,
+                        alignment: FractionalOffset.topCenter,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
