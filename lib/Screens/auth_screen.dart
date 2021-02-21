@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+//
+import '../Providers/auth_provider.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -9,12 +12,12 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _key = GlobalKey<FormState>();
 
-  final _userNameController = new TextEditingController();
   final _nameFocus = new FocusNode();
   final _passWordFocus = new FocusNode();
   final _confirmPswFocus = new FocusNode();
   final _passWordController = new TextEditingController();
   final _confirmPswController = new TextEditingController();
+  final _userNameController = new TextEditingController();
 
   bool _isLogin = true;
   bool _gButtonHighlightState = false;
@@ -23,13 +26,19 @@ class _AuthScreenState extends State<AuthScreen> {
   String _userName;
   String _passWord;
 
-  void validateTheData() {
+  void validateTheData() async {
     FocusScope.of(context).unfocus();
     if (_key.currentState.validate()) {
       _userName = _userNameController.text.toString();
       _passWord = _passWordController.text.toString();
       print(_userName);
       print(_passWord);
+      try {
+        await Provider.of<AuthenticationFirebase>(context, listen: false)
+            .authRegister(_userName, _passWord);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
