@@ -10,6 +10,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _key = GlobalKey<FormState>();
 
   final _nameFocus = new FocusNode();
@@ -26,28 +27,32 @@ class _AuthScreenState extends State<AuthScreen> {
   String _userName;
   String _passWord;
 
-  void validateTheData() async {
+  Future<String> validateTheData(BuildContext ctx) async {
     FocusScope.of(context).unfocus();
     if (_key.currentState.validate()) {
       _userName = _userNameController.text.toString();
       _passWord = _passWordController.text.toString();
       if (!_isLogin) {
         try {
-          await Provider.of<AuthenticationFirebase>(context, listen: false)
-              .authRegister(_userName, _passWord);
+          String message =
+              await Provider.of<AuthenticationFirebase>(context, listen: false)
+                  .authRegister(_userName, _passWord);
+          return message;
         } catch (e) {
           print(e);
         }
       } else {
         try {
-          await Provider.of<AuthenticationFirebase>(
+          String message = await Provider.of<AuthenticationFirebase>(
             context,
             listen: false,
           ).authLogin(_userName, _passWord);
+          return message;
         } catch (e) {
           print(e);
         }
       }
+      return null;
     }
   }
 
@@ -64,6 +69,7 @@ class _AuthScreenState extends State<AuthScreen> {
     double heightOfContainer = _isLogin ? height * 0.68 : height * 0.80;
 
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Theme.of(context).primaryColorDark,
       body: Center(
@@ -203,7 +209,24 @@ class _AuthScreenState extends State<AuthScreen> {
                             30,
                           ),
                         ),
-                        onPressed: validateTheData,
+                        onPressed: () async {
+                          String errorMessage = await validateTheData(context);
+                          if (errorMessage != null) {
+                            _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.white,
+                                content: Text(
+                                  errorMessage,
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     SizedBox(
