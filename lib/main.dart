@@ -1,7 +1,9 @@
 import 'package:basicAuth/Screens/auth_screen.dart';
+import 'package:basicAuth/Screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 //Relative imports
 import 'Providers/auth_provider.dart';
@@ -39,7 +41,15 @@ class MyApp extends StatelessWidget {
             caption: GoogleFonts.openSans(),
           ),
         ),
-        home: AuthScreen(),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (_, userSnapShot) {
+            if (userSnapShot.hasData) {
+              return LoggedScreen();
+            }
+            return AuthScreen();
+          },
+        ),
         debugShowCheckedModeBanner: false,
       ),
     );

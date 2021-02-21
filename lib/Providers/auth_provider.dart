@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class AuthenticationFirebase with ChangeNotifier {
   Future<void> authRegister(String username, String password) async {
@@ -23,25 +24,21 @@ class AuthenticationFirebase with ChangeNotifier {
     }
   }
 
-  Future<void> signUpUser(String username, String password) async {
+  Future<void> authLogin(String username, String password) async {
     final authInstance = FirebaseAuth.instance;
     try {
       await authInstance.signInWithEmailAndPassword(
           email: username, password: password);
       print("Login successfull");
     } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case "invalid-email":
-          print("Invalid-email");
-          break;
-        case "user-disabled":
-          print("User is disabled");
-          break;
-        case "user-not-foud":
-          print("User not found");
-          break;
-        case "wrong-password":
-          print("wrong password");
+      if (e.code == "user-not-found") {
+        print("user not found!!");
+      } else if (e.code == "invalid-email") {
+        print("invalid-email");
+      } else if (e.code == "user-disabled") {
+        print("user-disabled");
+      } else if (e.code == "wrong-password") {
+        print("wrong-password");
       }
     } catch (e) {
       print(e);

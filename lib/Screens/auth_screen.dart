@@ -40,8 +40,10 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       } else {
         try {
-          await Provider.of<AuthenticationFirebase>(context, listen: false)
-              .signUpUser(_userName, _passWord);
+          await Provider.of<AuthenticationFirebase>(
+            context,
+            listen: false,
+          ).authLogin(_userName, _passWord);
         } catch (e) {
           print(e);
         }
