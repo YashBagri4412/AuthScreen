@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-//
+//Relative Imports
 import '../Providers/auth_provider.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -31,13 +31,20 @@ class _AuthScreenState extends State<AuthScreen> {
     if (_key.currentState.validate()) {
       _userName = _userNameController.text.toString();
       _passWord = _passWordController.text.toString();
-      print(_userName);
-      print(_passWord);
-      try {
-        await Provider.of<AuthenticationFirebase>(context, listen: false)
-            .authRegister(_userName, _passWord);
-      } catch (e) {
-        print(e);
+      if (!_isLogin) {
+        try {
+          await Provider.of<AuthenticationFirebase>(context, listen: false)
+              .authRegister(_userName, _passWord);
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        try {
+          await Provider.of<AuthenticationFirebase>(context, listen: false)
+              .signUpUser(_userName, _passWord);
+        } catch (e) {
+          print(e);
+        }
       }
     }
   }
@@ -102,7 +109,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           if (value.isNotEmpty &&
                               value.contains("@") &&
                               value.contains(".com")) {
-                            print("Value is correct");
                             return null;
                           } else {
                             _userNameController.clear();
