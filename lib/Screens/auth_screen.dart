@@ -11,6 +11,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final _key = GlobalKey<FormState>();
 
   final _nameFocus = new FocusNode();
@@ -27,7 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
   String _userName;
   String _passWord;
 
-  Future<String> validateTheData(BuildContext ctx) async {
+  Future<String> _validateTheData(BuildContext ctx) async {
     FocusScope.of(context).unfocus();
     if (_key.currentState.validate()) {
       _userName = _userNameController.text.toString();
@@ -56,7 +57,31 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  void googleSignIn() {}
+  void googleSignIn() async {
+    String errorMessage;
+    try {
+      errorMessage =
+          await Provider.of<AuthenticationFirebase>(context, listen: false)
+              .googleLogIn();
+    } catch (e) {
+      print(e);
+    }
+    if (errorMessage != null) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.white,
+          content: Text(
+            errorMessage,
+            style: GoogleFonts.openSans(
+              fontSize: 14,
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +235,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                         ),
                         onPressed: () async {
-                          String errorMessage = await validateTheData(context);
+                          String errorMessage = await _validateTheData(context);
                           if (errorMessage != null) {
                             _scaffoldKey.currentState.showSnackBar(
                               SnackBar(
