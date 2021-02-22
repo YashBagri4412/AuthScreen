@@ -37,6 +37,9 @@ class _AuthScreenState extends State<AuthScreen> {
       _passWord = _passWordController.text.toString();
       if (!_isLogin) {
         try {
+          setState(() {
+            _progressReq = true;
+          });
           errorMessage =
               await Provider.of<AuthenticationFirebase>(context, listen: false)
                   .authRegister(_userName, _passWord);
@@ -63,6 +66,9 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       } else {
         try {
+          setState(() {
+            _progressReq = true;
+          });
           errorMessage = await Provider.of<AuthenticationFirebase>(
             context,
             listen: false,
@@ -89,6 +95,10 @@ class _AuthScreenState extends State<AuthScreen> {
           );
         }
       }
+
+      setState(() {
+        _progressReq = false;
+      });
       return null;
     }
   }
