@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          accentColor: Colors.amber,
+          accentColor: Colors.white,
           textTheme: TextTheme(
             bodyText1: GoogleFonts.openSans(),
             headline3: GoogleFonts.openSans(
