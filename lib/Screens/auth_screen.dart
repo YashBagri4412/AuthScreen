@@ -101,6 +101,7 @@ class _AuthScreenState extends State<AuthScreen> {
       });
       return null;
     }
+    return null;
   }
 
   void googleSignIn() async {
@@ -318,8 +319,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                               ),
                               onPressed: () async {
-                                String errorMessage =
-                                    await _validateTheData(context);
+                                await _validateTheData(context);
                               },
                             ),
                           ),
