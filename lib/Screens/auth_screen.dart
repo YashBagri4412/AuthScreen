@@ -12,7 +12,6 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   final _key = GlobalKey<FormState>();
 
   final _nameFocus = new FocusNode();
@@ -32,27 +31,62 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<String> _validateTheData(BuildContext context) async {
     FocusScope.of(context).unfocus();
+    String errorMessage;
     if (_key.currentState.validate()) {
       _userName = _userNameController.text.toString();
       _passWord = _passWordController.text.toString();
       if (!_isLogin) {
         try {
-          String message =
+          errorMessage =
               await Provider.of<AuthenticationFirebase>(context, listen: false)
                   .authRegister(_userName, _passWord);
-          return message;
         } catch (e) {
           print(e);
         }
+        if (errorMessage != null) {
+          setState(() {
+            _progressReq = false;
+          });
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.white,
+              content: Text(
+                errorMessage,
+                style: GoogleFonts.openSans(
+                  fontSize: 14,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        }
       } else {
         try {
-          String message = await Provider.of<AuthenticationFirebase>(
+          errorMessage = await Provider.of<AuthenticationFirebase>(
             context,
             listen: false,
           ).authLogin(_userName, _passWord);
-          return message;
         } catch (e) {
           print(e);
+        }
+        if (errorMessage != null) {
+          setState(() {
+            _progressReq = false;
+          });
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.white,
+              content: Text(
+                errorMessage,
+                style: GoogleFonts.openSans(
+                  fontSize: 14,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
         }
       }
       return null;
@@ -103,12 +137,19 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void dispose() {
     super.dispose();
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    _nameFocus.dispose();
+    _passWordFocus.dispose();
+    _confirmPswFocus.dispose();
+    _passWordController.dispose();
+    _confirmPswController.dispose();
+    _userNameController.dispose();
   }
 
   @override
@@ -269,21 +310,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               onPressed: () async {
                                 String errorMessage =
                                     await _validateTheData(context);
-                                if (errorMessage != null) {
-                                  _scaffoldKey.currentState.showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Colors.white,
-                                      content: Text(
-                                        errorMessage,
-                                        style: GoogleFonts.openSans(
-                                          fontSize: 14,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
                               },
                             ),
                           ),
