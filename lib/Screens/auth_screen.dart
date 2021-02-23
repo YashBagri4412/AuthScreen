@@ -31,7 +31,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<String> _validateTheData(BuildContext context) async {
     FocusScope.of(context).unfocus();
-    String errorMessage;
     if (_key.currentState.validate()) {
       _userName = _userNameController.text.toString();
       _passWord = _passWordController.text.toString();
@@ -40,42 +39,81 @@ class _AuthScreenState extends State<AuthScreen> {
           setState(() {
             _progressReq = true;
           });
-          errorMessage =
-              await Provider.of<AuthenticationFirebase>(context, listen: false)
-                  .authRegister(_userName, _passWord);
+          await Provider.of<AuthenticationFirebase>(context, listen: false)
+              .authRegister(_userName, _passWord)
+              .then((errorMessage) {
+            if (errorMessage != null) {
+              setState(() {
+                _progressReq = false;
+              });
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.white,
+                  content: Text(
+                    errorMessage,
+                    style: GoogleFonts.openSans(
+                      fontSize: 14,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }
+            return null;
+          });
         } catch (e) {
           print(e);
-        }
-        if (errorMessage != null) {
-          setState(() {
-            _progressReq = false;
-          });
-          _scaffoldKey.currentState.showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.white,
-              content: Text(
-                errorMessage,
-                style: GoogleFonts.openSans(
-                  fontSize: 14,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
         }
       } else {
         try {
           setState(() {
             _progressReq = true;
           });
-          errorMessage = await Provider.of<AuthenticationFirebase>(
+          await Provider.of<AuthenticationFirebase>(
             context,
             listen: false,
-          ).authLogin(_userName, _passWord);
+          ).authLogin(_userName, _passWord).then((String errorMessage) {
+            if (errorMessage != null) {
+              setState(() {
+                _progressReq = false;
+              });
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.white,
+                  content: Text(
+                    errorMessage,
+                    style: GoogleFonts.openSans(
+                      fontSize: 14,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }
+            return null;
+          });
         } catch (e) {
           print(e);
         }
+      }
+
+      setState(() {
+        _progressReq = false;
+      });
+    }
+    return null;
+  }
+
+  void googleSignIn() async {
+    setState(() {
+      _progressReq = true;
+    });
+    try {
+      await Provider.of<AuthenticationFirebase>(context, listen: false)
+          .googleLogIn()
+          .then((errorMessage) {
         if (errorMessage != null) {
           setState(() {
             _progressReq = false;
@@ -94,46 +132,12 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           );
         }
-      }
-
-      setState(() {
-        _progressReq = false;
+        return null;
       });
-      return null;
-    }
-    return null;
-  }
-
-  void googleSignIn() async {
-    String errorMessage;
-    setState(() {
-      _progressReq = true;
-    });
-    try {
-      errorMessage =
-          await Provider.of<AuthenticationFirebase>(context, listen: false)
-              .googleLogIn();
     } catch (e) {
       print(e);
     }
-    if (errorMessage != null) {
-      setState(() {
-        _progressReq = false;
-      });
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.white,
-          content: Text(
-            errorMessage,
-            style: GoogleFonts.openSans(
-              fontSize: 14,
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-    }
+
     setState(() {
       _progressReq = false;
     });
